@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-mongoose.connect('mongodb://localhost:27017/shopping', {
+mongoose.connect('mongodb+srv://vitanghiem28:yMqUn0csidckMVUz@cluster0.6nwnzjw.mongodb.net/shopping', {
 }).then(() => {
   console.log('Connected to MongoDB');
 }).catch(err => {

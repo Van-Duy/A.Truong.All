@@ -1,6 +1,8 @@
-const { createItem, findAllItems, findByIdAndDelete, findByIdAndUpdate , findById} = require('../services/slider.service');
+const { createItem, findAllItems, findByIdAndDelete, findByIdAndUpdate, findById } = require('../services/slider.service');
 const cloudinary = require('../configs/cloudinary');
 const fs = require('fs');
+
+
 
 const getAllItems = async (req, res, next) => {
     const items = await findAllItems(req.query);
@@ -41,19 +43,24 @@ const updateItem = async (req, res, next) => {
 
 const uploadImage = async (req, res, next) => {
     const image = req.file;
+    console.log("successful Printing");
+    console.log(image);
 
-    if(!image){
+    if (!image) {
         return res.status(400).json({
             message: 'No image provided !'
         });
     }
 
-    const result = await cloudinary.uploader.upload(image.path , {
+    const result = await cloudinary.uploader.upload(image.path, {
         folder: 'slider',
         resource_type: 'image',
         public_id: image.originalname,
         overwrite: true
     });
+
+    await findByIdAndUpdate(req.params.id, { image: result.secure_url });
+
 
     // delete image from local
     fs.unlinkSync(image.path);

@@ -10,7 +10,7 @@ router.put('/:id', updateItem);
 router.delete('/:id', deleteItem);
 
 
-router.post('/upload-image', upload.single('image'), uploadImage);
+router.post('/upload-image/:id', upload.single('image'), uploadImage);
 
 
 module.exports = router;

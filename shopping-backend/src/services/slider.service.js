@@ -2,24 +2,24 @@ const Slider = require('../models/slider.model');
 
 
 const findAllItems = async (
-    { status = "all"  , limit = 10 , page = 1 , sort = "ordering" , order = "asc" , keyword = "" } 
+    { status = "all", limit = 10, page = 1, sort = "ordering", order = "asc", keyword = "" }
 ) => {
 
-    let query = {}   
+    let query = {}
 
-    if(keyword){
+    if (keyword) {
         query.title = { $regex: keyword, $options: "i" }
     }
 
-    if(status !== "all" && status !== undefined){
+    if (status !== "all" && status !== undefined) {
         query.status = status
     }
-    
+
     let data = await Slider
-    .find(query)
-    .sort({ [sort]: order })
-    .skip((page - 1) * limit)
-    .limit(limit)
+        .find(query)
+        .sort({ [sort]: order })
+        .skip((page - 1) * limit)
+        .limit(limit)
 
     let total = await Slider.countDocuments(query)
 
@@ -47,6 +47,8 @@ const findByIdAndDelete = async (id) => {
 const findByIdAndUpdate = async (id, body) => {
     await Slider.findByIdAndUpdate(id, body)
 }
+
+
 
 module.exports = {
     createItem,

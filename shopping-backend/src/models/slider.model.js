@@ -1,11 +1,14 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const slugify = require('slugify');
+
 
 const sliderDocument = "slider"
 const sliderCollection = "sliders"
 
 const sliderSchema = new Schema({
     title: String,
+    slug: String,
     description: String,
     image: String,
     link: String,
@@ -31,6 +34,10 @@ const sliderSchema = new Schema({
     }
 });
 
+sliderSchema.pre("save", function (next) {
+    this.slug = slugify(this.title, { lower: true });
+    next();
+});
 
 module.exports = mongoose.model(sliderDocument, sliderSchema);
 

@@ -1,11 +1,11 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import {
-  useGetCategoriesQuery,
   useDeleteCategoryMutation,
   useUpdateCategoryMutation,
 } from "../../../store/slices/categoryApi"
+import { useGetCategoriesQuery } from "../../../services/category.api"
 import CategoryForm from "../../../components/admin/CategoryForm"
 import {
   Trash2,
@@ -25,6 +25,7 @@ import {
   FolderOpen,
   Folder,
 } from "lucide-react"
+import { ca } from "date-fns/locale"
 
 export default function CategoriesPage() {
   const [showForm, setShowForm] = useState(false)
@@ -43,7 +44,18 @@ export default function CategoriesPage() {
   const [editingOrdering, setEditingOrdering] = useState({})
   const [tempOrdering, setTempOrdering] = useState({})
 
-  const { data: categories = [], isLoading, error } = useGetCategoriesQuery()
+
+  const { data: categoriesData = {}, isLoading, error } = useGetCategoriesQuery()
+  console.log(categoriesData);
+  const [categories, setCategories] = useState([])
+
+  useEffect(() => {
+    if (categoriesData && categoriesData.data) {
+      setCategories(categoriesData.data)
+    }
+  }, [categoriesData])
+
+
   const [deleteCategory] = useDeleteCategoryMutation()
   const [updateCategory] = useUpdateCategoryMutation()
 
@@ -543,7 +555,7 @@ export default function CategoriesPage() {
                           <FolderOpen className="w-4 h-4 text-blue-500" />
                         )}
                         <div>
-                          <div className="text-sm font-medium text-gray-900">{category.name}</div>
+                          <div className="text-sm font-medium text-gray-900">{category.title}</div>
                           {category.description && (
                             <div className="text-xs text-gray-500 max-w-xs truncate">{category.description}</div>
                           )}
@@ -558,9 +570,8 @@ export default function CategoriesPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          category.status === "active" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                        }`}
+                        className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${category.status === "active" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                          }`}
                       >
                         {category.status === "active" ? "Hoạt động" : "Không hoạt động"}
                       </span>
@@ -636,13 +647,12 @@ export default function CategoriesPage() {
                         key={index}
                         onClick={() => typeof page === "number" && handlePageChange(page)}
                         disabled={page === "..."}
-                        className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
-                          page === currentPage
-                            ? "z-10 bg-blue-50 border-blue-500 text-blue-600"
-                            : page === "..."
-                              ? "border-gray-300 bg-white text-gray-500 cursor-default"
-                              : "border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
-                        }`}
+                        className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${page === currentPage
+                          ? "z-10 bg-blue-50 border-blue-500 text-blue-600"
+                          : page === "..."
+                            ? "border-gray-300 bg-white text-gray-500 cursor-default"
+                            : "border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+                          }`}
                       >
                         {page}
                       </button>

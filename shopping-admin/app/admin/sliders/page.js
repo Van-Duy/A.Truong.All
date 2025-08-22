@@ -42,7 +42,7 @@ export default function SlidersPage() {
   const [updateSlider] = useUpdateSliderMutation()
 
   useEffect(() => {
-    if(slidersData && slidersData.data) {
+    if (slidersData && slidersData.data) {
       setSliders(slidersData.data)
     }
   }, [slidersData])
@@ -109,6 +109,8 @@ export default function SlidersPage() {
   }
 
   const handleDelete = async (id) => {
+    console.log(id);
+
     if (window.confirm("Bạn có chắc chắn muốn xóa slider này?")) {
       try {
         await deleteSlider(id).unwrap()
@@ -284,7 +286,7 @@ export default function SlidersPage() {
   if (isLoading) return <div className="text-center py-8">Đang tải...</div>
   if (error) return <div className="text-center py-8 text-red-600">Có lỗi xảy ra</div>
 
-  
+
 
   return (
     <div>
@@ -509,9 +511,8 @@ export default function SlidersPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          slider.active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                        }`}
+                        className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${slider.active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                          }`}
                       >
                         {slider.active ? "Hoạt động" : "Không hoạt động"}
                       </span>
@@ -587,13 +588,12 @@ export default function SlidersPage() {
                         key={index}
                         onClick={() => typeof page === "number" && handlePageChange(page)}
                         disabled={page === "..."}
-                        className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
-                          page === currentPage
-                            ? "z-10 bg-blue-50 border-blue-500 text-blue-600"
-                            : page === "..."
-                              ? "border-gray-300 bg-white text-gray-500 cursor-default"
-                              : "border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
-                        }`}
+                        className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${page === currentPage
+                          ? "z-10 bg-blue-50 border-blue-500 text-blue-600"
+                          : page === "..."
+                            ? "border-gray-300 bg-white text-gray-500 cursor-default"
+                            : "border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+                          }`}
                       >
                         {page}
                       </button>

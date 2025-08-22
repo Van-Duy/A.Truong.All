@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useCreateSliderMutation, useUpdateSliderMutation } from "../../store/slices/sliderApi"
+import { useUpdateSliderMutation } from "../../store/slices/sliderApi"
+import { useCreateSliderMutation, useUploadSliderImageMutation } from '../../services/slider.api'
 import { X } from "lucide-react"
 
 export default function SliderForm({ slider, onClose, nextOrdering = 1 }) {
@@ -16,6 +17,7 @@ export default function SliderForm({ slider, onClose, nextOrdering = 1 }) {
   })
 
   const [createSlider, { isLoading: isCreating }] = useCreateSliderMutation()
+  const [uploadImage, { isLoading: isUploading }] = useUploadSliderImageMutation()
   const [updateSlider, { isLoading: isUpdating }] = useUpdateSliderMutation()
 
   useEffect(() => {
@@ -70,36 +72,44 @@ export default function SliderForm({ slider, onClose, nextOrdering = 1 }) {
     e.preventDefault()
 
     try {
-      let imageUrl = formData.image
+      // let imageUrl = formData.image
 
-      if (formData.imageFile) {
-        const uploadFormData = new FormData()
-        uploadFormData.append("file", formData.imageFile)
+      // if (formData.imageFile) {
+      //   const uploadFormData = new FormData()
+      //   uploadFormData.append("file", formData.imageFile)
 
-        const uploadResponse = await fetch("/api/upload", {
-          method: "POST",
-          body: uploadFormData,
-        })
+      //   const uploadResponse = await fetch("/api/upload", {
+      //     method: "POST",
+      //     body: uploadFormData,
+      //   })
 
-        if (uploadResponse.ok) {
-          const uploadResult = await uploadResponse.json()
-          imageUrl = uploadResult.url
-        } else {
-          throw new Error("Upload file thất bại")
-        }
-      }
+      //   if (uploadResponse.ok) {
+      //     const uploadResult = await uploadResponse.json()
+      //     imageUrl = uploadResult.url
+      //   } else {
+      //     throw new Error("Upload file thất bại")
+      //   }
+      // }
 
       const sliderData = {
         ...formData,
-        image: imageUrl,
         ordering: Number.parseInt(formData.ordering) || 0,
-        imageFile: undefined,
       }
 
       if (slider) {
         await updateSlider({ id: slider.id, ...sliderData }).unwrap()
       } else {
-        await createSlider(sliderData).unwrap()
+        let { id } = await createSlider(sliderData).unwrap()
+        // upload images
+        if (formData.imageFile) {
+          const uploadFormData = new FormData()
+          uploadFormData.append("image", formData.imageFile)
+          console.log(uploadFormData.get("image"));
+
+          // Upl  oad image
+          await uploadImage(id, uploadFormData).unwrap()
+        }
+
       }
       onClose()
     } catch (error) {

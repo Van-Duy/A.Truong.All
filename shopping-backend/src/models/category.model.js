@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const slugify = require('slugify');
 
 const categoryDocument = "category"
 const categoryCollection = "categories"

@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
+//multer 
+
 
 mongoose.connect('mongodb+srv://vitanghiem28:yMqUn0csidckMVUz@cluster0.6nwnzjw.mongodb.net/shopping', {
 }).then(() => {
@@ -23,6 +25,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 app.use('/', require('./src/routes/index'));
 

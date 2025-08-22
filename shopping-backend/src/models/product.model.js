@@ -17,7 +17,7 @@ const productSchema = new Schema({
         type: String,
         unique: true
     },
-    images: [{
+    gallery: [{
         type: String
     }],
     stock: Number,

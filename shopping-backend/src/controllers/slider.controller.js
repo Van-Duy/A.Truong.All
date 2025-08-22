@@ -21,9 +21,10 @@ const getDetailItem = async (req, res, next) => {
 }
 
 const addItem = async (req, res, next) => {
-    await createItem(req.body);
+    const id = await createItem(req.body);
     res.json({
         message: 'add item !',
+        id
     })
 }
 
@@ -42,6 +43,8 @@ const updateItem = async (req, res, next) => {
 }
 
 const uploadImage = async (req, res, next) => {
+    console.log(req.file);
+
     const image = req.file;
     console.log("successful Printing");
     console.log(image);
@@ -72,6 +75,7 @@ const uploadImage = async (req, res, next) => {
 }
 
 
+
 module.exports = {
     addItem,
     getAllItems,
@@ -79,4 +83,5 @@ module.exports = {
     updateItem,
     getDetailItem,
     uploadImage
+
 }

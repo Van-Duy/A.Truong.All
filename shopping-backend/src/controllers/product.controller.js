@@ -69,6 +69,39 @@ const uploadImage = async (req, res, next) => {
     })
 }
 
+const uploadGallery = async (req, res, next) => {
+    const images = req.files;
+    console.log("successful Printing");
+    console.log(images);
+
+    if (!images || images.length === 0) {
+        return res.status(400).json({
+            message: 'No images provided !'
+        });
+    }
+
+    const imageUrls = await Promise.all(images.map(async (image) => {
+        const result = await cloudinary.uploader.upload(image.path, {
+            folder: 'slider',
+            resource_type: 'image',
+            public_id: image.originalname,
+            overwrite: true
+        });
+
+        // delete image from local
+        fs.unlinkSync(image.path);
+
+        return result.secure_url;
+    }));
+
+    await findByIdAndUpdate(req.params.id, { gallery: imageUrls });
+
+    res.json({
+        message: 'upload gallery !',
+        gallery: imageUrls
+    })
+}
+
 
 module.exports = {
     addItem,
@@ -76,5 +109,6 @@ module.exports = {
     deleteItem,
     updateItem,
     getDetailItem,
-    uploadImage
+    uploadImage,
+    uploadGallery
 }

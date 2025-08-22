@@ -1,9 +1,10 @@
+import { updateCategory } from "@/lib/categories-data"
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
 export const sliderApi = createApi({
     reducerPath: "sliderApi",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:8000/",
+        baseUrl: "http://localhost:3000/",
     }),
     tagTypes: ["Slider"],
     endpoints: (builder) => ({
@@ -20,6 +21,8 @@ export const sliderApi = createApi({
                 method: "POST",
                 body: newSlider,
             }),
+            invalidatesTags: ["Slider"],
+            providesTags: (result, error, id) => [{ type: "Slider", id }],
         }),
         updateSlider: builder.mutation({
             query: ({ id, ...patch }) => ({
@@ -33,10 +36,20 @@ export const sliderApi = createApi({
                 url: `slider/${id}`,
                 method: "DELETE",
             }),
+            invalidatesTags: ["Slider"],
         }),
         getSlider: builder.query({
             query: (id) => `slider/${id}`,
             providesTags: (result, error, id) => [{ type: "Slider", id }],
+        }),
+        uploadSliderImage: builder.mutation({
+            //header multipart/form-data
+            query: (id, formData) => ({
+                url: `slider/upload-image/${id}`,
+                method: "POST",
+                body: formData,
+            }),
+            invalidatesTags: ["Slider"],
         }),
     }),
 })
@@ -49,4 +62,5 @@ export const {
     useUpdateSliderMutation,
     useDeleteSliderMutation,
     useGetSliderQuery,
+    useUploadSliderImageMutation,
 } = sliderApi

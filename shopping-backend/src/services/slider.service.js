@@ -37,7 +37,9 @@ const findById = async (id) => {
 }
 
 const createItem = async (body) => {
-    await Slider.create(body)
+    // get id
+    const item = await Slider.create(body)
+    return item._id
 }
 
 const findByIdAndDelete = async (id) => {

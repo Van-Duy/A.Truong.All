@@ -43,8 +43,7 @@ export const sliderApi = createApi({
             providesTags: (result, error, id) => [{ type: "Slider", id }],
         }),
         uploadSliderImage: builder.mutation({
-            //header multipart/form-data
-            query: (id, formData) => ({
+            query: ({ id, formData }) => ({
                 url: `slider/upload-image/${id}`,
                 method: "POST",
                 body: formData,

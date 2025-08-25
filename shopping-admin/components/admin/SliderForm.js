@@ -72,24 +72,6 @@ export default function SliderForm({ slider, onClose, nextOrdering = 1 }) {
     e.preventDefault()
 
     try {
-      // let imageUrl = formData.image
-
-      // if (formData.imageFile) {
-      //   const uploadFormData = new FormData()
-      //   uploadFormData.append("file", formData.imageFile)
-
-      //   const uploadResponse = await fetch("/api/upload", {
-      //     method: "POST",
-      //     body: uploadFormData,
-      //   })
-
-      //   if (uploadResponse.ok) {
-      //     const uploadResult = await uploadResponse.json()
-      //     imageUrl = uploadResult.url
-      //   } else {
-      //     throw new Error("Upload file thất bại")
-      //   }
-      // }
 
       const sliderData = {
         ...formData,
@@ -104,10 +86,8 @@ export default function SliderForm({ slider, onClose, nextOrdering = 1 }) {
         if (formData.imageFile) {
           const uploadFormData = new FormData()
           uploadFormData.append("image", formData.imageFile)
-          console.log(uploadFormData.get("image"));
-
-          // Upl  oad image
-          await uploadImage(id, uploadFormData).unwrap()
+          // Upload image
+          await uploadImage({ id, formData: uploadFormData }).unwrap()
         }
 
       }

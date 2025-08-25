@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react"
 import {
+  useGetCategoriesQuery,
   useCreateCategoryMutation,
   useUpdateCategoryMutation,
-  useGetCategoriesQuery,
-} from "../../store/slices/categoryApi"
+} from "../../services/category.api"
+
 import { generateSlug } from "../../lib/categories-data"
 import { X } from "lucide-react"
 
@@ -23,33 +24,28 @@ export default function CategoryForm({ category, onClose, nextOrdering = 1 }) {
 
   const [autoSlug, setAutoSlug] = useState(true)
 
-  const { data: categories = [] } = useGetCategoriesQuery()
-  const [createCategory, { isLoading: isCreating }] = useCreateCategoryMutation()
-  const [updateCategory, { isLoading: isUpdating }] = useUpdateCategoryMutation()
+  // const { data: categories = [], isLoading: isLoadingCategories } = useGetCategoriesQuery()
 
-  // Get parent categories (categories without parentId)
-  const parentCategories = categories.filter((c) => c.parentId === null && c.id !== category?.id)
-
-  useEffect(() => {
-    if (category) {
-      setFormData({
-        name: category.name || "",
-        slug: category.slug || "",
-        description: category.description || "",
-        image: category.image || "",
-        imageFile: null,
-        parentId: category.parentId || null,
-        ordering: category.ordering || nextOrdering,
-        status: category.status || "active",
-      })
-      setAutoSlug(false)
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        ordering: nextOrdering,
-      }))
-    }
-  }, [category, nextOrdering])
+  // useEffect(() => {
+  //   if (category) {
+  //     setFormData({
+  //       name: category.name || "",
+  //       slug: category.slug || "",
+  //       description: category.description || "",
+  //       image: category.image || "",
+  //       imageFile: null,
+  //       parentId: category.parentId || null,
+  //       ordering: category.ordering || nextOrdering,
+  //       status: category.status || "active",
+  //     })
+  //     setAutoSlug(false)
+  //   } else {
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       ordering: nextOrdering, // Ensure ordering is set to nextOrdering when creating a new category
+  //     }))
+  //   }
+  // }, [category, nextOrdering]) // Added nextOrdering to dependency array
 
   const handleFileChange = (e) => {
     const file = e.target.files[0]
@@ -219,11 +215,11 @@ export default function CategoryForm({ category, onClose, nextOrdering = 1 }) {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">-- Danh mục gốc --</option>
-            {parentCategories.map((cat) => (
+            {/* {categories.map((cat) => ( // Changed parentCategories to categories
               <option key={cat.id} value={cat.id}>
                 {cat.name}
               </option>
-            ))}
+            ))} */}
           </select>
         </div>
 
@@ -312,10 +308,9 @@ export default function CategoryForm({ category, onClose, nextOrdering = 1 }) {
           </button>
           <button
             type="submit"
-            disabled={isCreating || isUpdating}
             className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
           >
-            {isCreating || isUpdating ? "Đang lưu..." : "Lưu"}
+            Lưu
           </button>
         </div>
       </form>

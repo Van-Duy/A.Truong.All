@@ -20,6 +20,17 @@ const productSchema = new Schema({
     gallery: [{
         type: String
     }],
+    rating: {
+        type: Number,
+        default: 0,
+        // chẹck rating trong khoảng 0-5
+        validate: {
+            validator: function (v) {
+                return v >= 0 && v <= 5;
+            },
+            message: "Rating must be between 0 and 5"
+        },
+    },
     stock: Number,
     isSpecial: {
         type: Boolean,
